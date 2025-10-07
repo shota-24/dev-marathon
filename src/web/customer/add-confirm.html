@@ -3,16 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件情報入力</title>
+    <title>顧客情報確認</title>
     <!-- Bootstrap CSSの読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
+        <h2 class="mb-4">入力内容の確認</h2>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">顧客情報</h5>
+                <p class="card-text"><strong>会社名:</strong> <span id="companyName"></span></p>
+                <p class="card-text"><strong>業種:</strong> <span id="industry"></span></p>
+                <p class="card-text"><strong>連絡先:</strong> <span id="contact"></span></p>
+                <p class="card-text"><strong>所在地:</strong> <span id="location"></span></p>
+            </div>
+        </div>
+        <div class="mt-4">
+            <button id="confirm-button" class="btn btn-primary">確定</button>
+            <a href="add.html" class="btn btn-secondary">戻る</a>
+        </div>
     </div>
     <script type="module">
-        <!-- ここにJSを書く -->
+        import config from '../config.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const companyName = urlParams.get('companyName');
+        const industry = urlParams.get('industry');
+        const contact = urlParams.get('contact');
+        const location = urlParams.get('location');
+
+        document.getElementById('companyName').textContent = companyName;
+        document.getElementById('industry').textContent = industry;
+        document.getElementById('contact').textContent = contact;
+        document.getElementById('location').textContent = location;
+
+        document.getElementById('confirm-button').addEventListener('click', function() {
+            const formData = new URLSearchParams();
+            formData.append('companyName', companyName);
+            formData.append('industry', industry);
+            formData.append('contact', contact);
+            formData.append('location', location);
+
+            fetch(config.apiUrl + '/add-customer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: formData
+            }).then(response => response.json())
+              .then(data => {
+                if(data.success) {
+                    alert('顧客情報が正常に保存されました。');
+                    window.location.href = 'list.html'; // Redirect to the list page
+                } else {
+                    alert('保存に失敗しました。');
+                }
+              })
+              .catch(error => console.error('Error:', error));
+        });
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

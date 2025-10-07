@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Detail</title>
+    <!-- Bootstrap CSSの読み込み -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Customer Detail</h1>
+        <div id="customer-detail">
+            <div class="actions">
+                <button onclick="history.back()">戻る</button>
+                <button id="update-button">更新</button>
+            </div>
+        </div>
+        <button id="delete-button" class="btn btn-danger mt-3">削除</button>
+    </div>
+
+    <script type="module">
+        import config from '../config.js';
+
+        // URLからcustomerIdを取得
+        const urlParams = new URLSearchParams(window.location.search);
+        const customerId = urlParams.get('customerId');
+
+        // 更新ボタンのイベントリスナー
+        document.getElementById('update-button').addEventListener('click', function() {
+            window.location.href = 'update.html?id=' + customerId;
+        });
+
+        // 削除ボタンのイベントリスナー
+        document.getElementById('delete-button').addEventListener('click', function() {
+            if (confirm('本当に削除しますか？')) {
+                fetch(`${config.apiUrl}/customer/${customerId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('顧客情報を削除しました。');
+                        window.location.href = 'list.html';
+                    } else {
+                        alert('削除に失敗しました。');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('削除中にエラーが発生しました。');
+                });
+            }
+        });
+
+        // ExpressサーバのAPIエンドポイントのURL
+        fetch(`${config.apiUrl}/customer/${customerId}`)
+            .then(response => response.json())
+            .then(customer => {
+                const detail = document.getElementById('customer-detail');
+                // テーブルを作成して顧客情報を表示
+                const table = document.createElement('table');
+                table.classList.add('table', 'table-bordered');
+                const tbody = table.createTBody();
+
+                for (const key in customer) {
+                    if (customer.hasOwnProperty(key)) {
+                        const row = tbody.insertRow();
+                        const cell1 = row.insertCell(0);
+                        const cell2 = row.insertCell(1);
+                        cell1.textContent = key;
+                        cell2.textContent = customer[key];
+                    }
+                }
+                detail.appendChild(table);
+            })
+            .catch(error => console.error(error));
+    </script>
+
+    <!-- BootstrapのJavaScriptと依存関係のリンク -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
