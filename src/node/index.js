@@ -110,6 +110,6 @@ router.put("/customer/:customerId", async (req, res) => {
   }
 });
 
-app.use("/api_shota_nishinaga", router);
+app.use(router);
 
 app.use(express.static("public"));
