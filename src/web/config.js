@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: '/api_shotanishinaga'
+  apiUrl: '/api_shota_nishinaga'
 };
 
-export default config;
+export default config;  
