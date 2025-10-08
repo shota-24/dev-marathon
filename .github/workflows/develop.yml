@@ -14,4 +14,7 @@ jobs:
           SSH_PORT: ${{ secrets.DEV_SSH_PORT }}
           SSH_USER: ${{ secrets.DEV_SSH_USER }}
           SSH_KEY: ${{ secrets.DEV_SSHE_KEY }}
-      - run: "- run: ls -l /app/***/ && bash /app/shota_nishinaga/deploy.sh shota_nishinaga"
+      - name: List and deploy
+        run: |
+          ls -l /app/shota_nishinaga/
+          bash /app/shota_nishinaga/deploy.sh shota_nishinaga
