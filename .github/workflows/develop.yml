@@ -24,4 +24,4 @@ jobs:
       # 3️⃣ リモートサーバーで deploy.sh を実行
       - name: List and deploy on remote
         run: ssh -o StrictHostKeyChecking=no ${{ steps.ssh.outputs.SERVER }} \
-            "ls -l /app/shota_nishinaga/ && bash /app/shota_nishinaga/dev-marathon/deploy.sh shota_nishinaga"
+            "ls -l /app/shota_nishinaga/ && bash /app/shota_nishinaga/deploy.sh shota_nishinaga"
