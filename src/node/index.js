@@ -1,12 +1,12 @@
 const express = require("express");
 const app = express();
 const router = express.Router();
-app.use(express.urlencoded({ extended: true }));
-
 const port = 5230;
 
 const cors = require("cors");
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
 const { Pool } = require("pg");
 const pool = new Pool({
@@ -76,9 +76,6 @@ router.delete("/customer/:customerId", async (req, res) => {
     client.release();
   }
 });
-
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 router.post("/add-customer", async (req, res) => {
   try {
