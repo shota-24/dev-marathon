@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const router = express.Router();
 app.use(express.urlencoded({ extended: true }));
 
 const port = 5230;
@@ -9,10 +10,10 @@ app.use(cors());
 
 const { Pool } = require("pg");
 const pool = new Pool({
-  user: "5230", // PostgreSQLのユーザー名に置き換えてください
-  host: "db",
-  database: "5230", // PostgreSQLのデータベース名に置き換えてください
-  password: "5230", // PostgreSQLのパスワードに置き換えてください
+  user: "user_shota_nishinaga", // PostgreSQLのユーザー名に置き換えてください
+  host: "localhost",
+  database: "db_shota_nishinaga", // PostgreSQLのデータベース名に置き換えてください
+  password: "5Rw5YDaWc5jc", // PostgreSQLのパスワードに置き換えてください
   port: 5432,
 });
 
@@ -20,7 +21,7 @@ app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-app.get("/customers", async (req, res) => {
+router.get("/customers", async (req, res) => {
   try {
     const customerData = await pool.query("SELECT * FROM customers");
     res.send(customerData.rows);
@@ -30,7 +31,7 @@ app.get("/customers", async (req, res) => {
   }
 });
 
-app.get("/customer/:customerId", async (req, res) => {
+router.get("/customer/:customerId", async (req, res) => {
   try {
     const { customerId } = req.params;
     const customerData = await pool.query("SELECT * FROM customers WHERE customer_id = $1", [customerId]);
@@ -41,7 +42,7 @@ app.get("/customer/:customerId", async (req, res) => {
   }
 });
 
-app.delete("/customer/:customerId", async (req, res) => {
+router.delete("/customer/:customerId", async (req, res) => {
   const { customerId } = req.params;
   const client = await pool.connect();
   try {
@@ -79,7 +80,7 @@ app.delete("/customer/:customerId", async (req, res) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.post("/add-customer", async (req, res) => {
+router.post("/add-customer", async (req, res) => {
   try {
     const { companyName, industry, contact, location } = req.body;
     const newCustomer = await pool.query(
@@ -93,7 +94,7 @@ app.post("/add-customer", async (req, res) => {
   }
 });
 
-app.put("/customer/:customerId", async (req, res) => {
+router.put("/customer/:customerId", async (req, res) => {
   try {
     const { customerId } = req.params;
     const { companyName, industry, contact, location } = req.body;
@@ -111,5 +112,7 @@ app.put("/customer/:customerId", async (req, res) => {
     res.status(500).json({ success: false, message: "Internal Server Error" });
   }
 });
+
+app.use("/api_shota_nishinaga", router);
 
 app.use(express.static("public"));

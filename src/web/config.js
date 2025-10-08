@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: 'http://localhost:5230'
+  apiUrl: '/api_shotanishinaga'
 };
 
 export default config;
