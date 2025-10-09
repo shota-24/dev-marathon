@@ -33,7 +33,7 @@ describe('顧客情報入力フォームのテスト', () => {
     cy.wait(5000);
   });
 
-  it('削除ボタンが聞くかどうか', () => {
+  it('削除ボタンが効くかどうか', () => {
     cy.visit('/shota_nishinaga/customer/list.html');//一覧表示に遷移
 
     let linkText; // 変数を定義
@@ -55,5 +55,26 @@ describe('顧客情報入力フォームのテスト', () => {
         cy.contains(linkText).should('not.exist');
       });
 
+  })
+
+  it('更新機能が効くかどうか', () => {
+    cy.visit('/shota_nishinaga/customer/list.html');//一覧表示に遷移
+    
+    cy.contains('tr', '1')   // tdに「1」を含む行を探す
+      .find('a')             // その行内のa要素を探す
+      .click();              // リンクをクリック
+
+    cy.contains('button','更新').click();
+
+    cy.get('input[name="companyName"]').clear();
+    cy.get('input[name="companyName"]').type('cypress最高!');
+    cy.contains('button','確認').click();
+
+    cy.contains('button','確定').click();
+
+    cy.get('table tr')      // すべてのtrを取得
+      .last()               // 一番最後のtrを選択
+      .find('a')            // そのtr内のa要素を取得
+      .should('have.text', 'cypress最高!');
   })
 });
