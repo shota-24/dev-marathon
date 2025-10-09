@@ -1,10 +1,6 @@
 describe('顧客情報入力フォームのテスト', () => {
   it('顧客情報を入力して送信し、成功メッセージを確認する', () => {
-    cy.visit('/nishi/customer/add.html'); // テスト対象のページにアクセス
-    cy.window().then((win) => {
-      // windowのalertをスタブ化し、エイリアスを設定
-      cy.stub(win, 'alert').as('alertStub');
-    });
+    cy.visit('/shota_nishinaga/customer/add.html'); // テスト対象のページにアクセス
 
     // テストデータの読み込み
     cy.fixture('customerData').then((data) => {
@@ -18,6 +14,14 @@ describe('顧客情報入力フォームのテスト', () => {
 
     // フォームの送信
     cy.get('#customer-form').submit();
+
+    cy.window().then((win) => {
+    // windowのalertをスタブ化し、エイリアスを設定
+      cy.stub(win, 'alert').as('alertStub');
+    });
+
+    //確認画面で確定を押す
+    cy.contains('button','確定').click();
 
     cy.get('@alertStub').should('have.been.calledOnceWith', '顧客情報が正常に保存されました。');
 
