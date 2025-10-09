@@ -32,4 +32,28 @@ describe('顧客情報入力フォームのテスト', () => {
     cy.get('#location').should('have.value', '');
     cy.wait(5000);
   });
+
+  it('削除ボタンが聞くかどうか', () => {
+    cy.visit('/shota_nishinaga/customer/list.html');//一覧表示に遷移
+
+    let linkText; // 変数を定義
+
+    cy.get('tr').contains('td', '1')
+      .parent('tr')
+      .find('a')
+      .invoke('text')         // a要素のテキストを取得
+      .then((text) => {
+        linkText = text.trim();   // 変数にセット（前後の空白除去）
+        cy.log('リンクの文字列:', linkText); // デバッグ表示
+
+        cy.contains('tr', '1')   // tdに「1」を含む行を探す
+          .find('a')             // その行内のa要素を探す
+          .click();              // リンクをクリック
+
+        cy.contains('button','削除').click();
+
+        cy.contains(linkText).should('not.exist');
+      });
+
+  })
 });
