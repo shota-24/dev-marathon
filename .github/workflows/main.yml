@@ -1,0 +1,27 @@
+name: SSH Deploy
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # 1️⃣ リポジトリをチェックアウト
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ SSH接続の準備
+      - id: ssh
+        uses: invi5H/ssh-action@v1
+        with:
+          SSH_HOST: ${{ secrets.MAIN_SSH_HOST }}
+          SSH_PORT: ${{ secrets.MAIN_SSH_PORT }}
+          SSH_USER: ${{ secrets.MAIN_SSH_USER }}
+          SSH_KEY: ${{ secrets.MAIN_SSHE_SSH_KEY }}
+
+      # 3️⃣ リモートサーバーで deploy.sh を実行
+      - name: List and deploy on remote
+        run: ssh -o StrictHostKeyChecking=no ${{ steps.ssh.outputs.SERVER }} \
+            "ls -l /app/shota_nishinaga/ && bash /app/shota_nishinaga/deploy.sh shota_nishinaga"
