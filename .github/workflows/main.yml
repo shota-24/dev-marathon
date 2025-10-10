@@ -33,14 +33,14 @@ jobs:
         with:
           host: ${{ secrets.DEV_SSH_HOST }}
           port: ${{ secrets.DEV_SSH_PORT }}
-          username: ${{ secrets.DEV_SSHE_SSH_USER }}
-          key: ${{ secrets.DEV_SSH_KEY }}
+          username: ${{ secrets.DEV_SSH_USER }}
+          key: ${{ secrets.DEV_SSHE_SSH_KEY }}
           script: |
             echo "Running E2E tests..."
             cd /ci
             npx cypress run --spec "cypress/e2e/shota_nishinaga.cy.js"
 
-deploy-to-production:
+  deploy-to-production:
     name: Deploy to Production
     needs: deploy-and-test-staging # deploy-and-test-stagingジョブの成功を待つ
     runs-on: ubuntu-latest
@@ -55,9 +55,10 @@ deploy-to-production:
         with:
           host: ${{ secrets.MAIN_SSH_HOST }}
           port: ${{ secrets.MAIN_SSH_PORT }}
-          username: ${{ secrets.main_SSH_USER }}
+          username: ${{ secrets.MAIN_SSH_USER }}
           key: ${{ secrets.MAIN_SSHE_SSH_KEY }}
           script: |
+            echo "Deploying to production..."
             cd /app/shota_nishinaga
             git pull
             bash ./deploy.sh shota_nishinaga
