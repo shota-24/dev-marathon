@@ -35,13 +35,17 @@
         })
         .then((data) => {
           console.log(data); // ここで解析されたデータをログに出力
+
+          // customer_idの小さい順にソート
+          data.sort((a, b) => a.customer_id - b.customer_id);
+
           const list = document.getElementById("customer-list");
-          data.forEach((customer, index) => {
+          data.forEach((customer) => {
             const row = list.insertRow();
             const cell1 = row.insertCell(0);
             const cell2 = row.insertCell(1);
             const cell3 = row.insertCell(2);
-            cell1.textContent = index + 1;
+            cell1.textContent = customer.customer_id; // #をIDに変更
             cell2.innerHTML = `<a href="detail.html?customerId=${customer.customer_id}">${customer.company_name}</a>`;
             cell3.textContent = customer.contact;
           });
