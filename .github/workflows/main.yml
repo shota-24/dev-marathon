@@ -24,7 +24,7 @@ jobs:
           key: ${{ secrets.DEV_SSHE_SSH_KEY }}
           script: |
             cd /app/shota_nishinaga
-            git pull
+            git pull origin main
             bash ./deploy.sh shota_nishinaga
 
       # 3. ステージング環境に対してE2Eテストを実行
@@ -60,5 +60,5 @@ jobs:
           script: |
             echo "Deploying to production..."
             cd /app/shota_nishinaga
-            git pull
+            git pull origin main
             bash ./deploy.sh shota_nishinaga
